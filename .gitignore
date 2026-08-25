@@ -8,3 +8,5 @@ fixtures/*.db
 fixtures/*.db-journal
 fixtures/*.db-wal
 fixtures/*.db-shm
+AUDIT-REPORT.md
+CODE-REVIEW.md
