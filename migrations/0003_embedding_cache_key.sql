@@ -33,5 +33,5 @@ DROP TABLE memory_embeddings_old;
 -- 6. Recreate index (now queries by model are still efficient)
 CREATE INDEX idx_embeddings_model ON memory_embeddings(model);
 
--- 7. Update migrations_applied
-UPDATE schema_meta SET value = '3' WHERE key = 'migrations_applied';
+-- 7. Note: migrations_applied is updated by the migration runner,
+--    so we do NOT self-update it here (was redundant in 0001/0002).

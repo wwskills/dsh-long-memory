@@ -16,4 +16,4 @@ CREATE INDEX IF NOT EXISTS idx_l7_buffer_session ON l7_buffer(session_id);
 -- Track last L7 run timestamp (key-value)
 INSERT OR IGNORE INTO schema_meta(key, value) VALUES ('l7_last_run', '0');
 
-UPDATE schema_meta SET value = '2' WHERE key = 'migrations_applied';
+-- Note: migrations_applied is updated by the migration runner.

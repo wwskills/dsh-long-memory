@@ -27,7 +27,7 @@
   ],
   "scripts": {
     "test": "node scripts/test-migration.js && node scripts/test-tools-e2e.js",
-    "prepublishOnly": "node scripts/test-migration.js"
+    "prepublishOnly": "npm test"
   },
   "keywords": [
     "dsh",
