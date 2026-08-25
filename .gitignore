@@ -1,6 +1,10 @@
 node_modules/
 *.tgz
 .DS_Store
-fixtures/
-AUDIT-REPORT.md
-CODE-REVIEW.md
+*.log
+.env
+.env.local
+fixtures/*.db
+fixtures/*.db-journal
+fixtures/*.db-wal
+fixtures/*.db-shm
