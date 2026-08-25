@@ -1,0 +1,81 @@
+{
+  "name": "@wwskills/dsh-long-memory",
+  "version": "0.1.0",
+  "description": "Long-term cross-session memory plugin for DeepSeek Harness (L5 + L7 layers): SQLite-backed, FTS5 + optional embedding recall, append-only audit log, single-bundle dual-face packaging.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./invariant": {
+      "default": "./lib/invariant.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/**/*",
+    "migrations/**/*",
+    "cordis.patch.yml",
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node scripts/test-migration.js && node scripts/test-tools-e2e.js",
+    "prepublishOnly": "node scripts/test-migration.js"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "memory",
+    "long-term-memory",
+    "cordis-plugin",
+    "sqlite",
+    "fts5"
+  ],
+  "license": "MIT",
+  "author": "wangww",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wwskills/dsh-long-memory.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wwskills/dsh-long-memory/issues"
+  },
+  "homepage": "https://github.com/wwskills/dsh-long-memory#readme",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-primitives"
+      ]
+    }
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-invariants": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-session": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-base": "^0.1.0-rc.6",
+    "react": "^18.2.0"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true },
+    "@deepseek-ai/dsh-client-ui-*": { "optional": true },
+    "@deepseek-ai/dsh-client-*": { "optional": true }
+  }
+}

@@ -1,0 +1,66 @@
+# @wwskills/dsh-long-memory cordis patch
+#
+# Default install for the Web profile. Mounts the long-memory service +
+# the 8 mem_* tools, plus the browser-side settings tab.
+#
+# Apply with:
+#   dsh plugin --profile web add @wwskills/dsh-long-memory
+#
+# Per-profile config overrides can target `long-memory.config.*` keys below.
+
+- insert:
+    - id: long-memory
+      name: '@wwskills/dsh-long-memory'
+      config:
+        # Storage — defaults to $DSH_HOME/long-memory/long-memory.db. Override
+        # per-deployment by writing your own patch layer.
+        storage:
+          driver: 'node-builtin'        # 'node-builtin' (default, no native deps)
+                                        # | 'better-sqlite3' (M2+ once native addons are validated)
+          path: ${DSH_HOME}/long-memory/long-memory.db
+          markdown_dir: ${DSH_HOME}/long-memory/markdown
+          busy_timeout_ms: 3000
+
+        # Embedding — 'none' disables vector recall (FTS5 keyword fallback).
+        # 'ollama' = local Ollama service (zero API cost).
+        # 'openai-compatible' = any OpenAI-style API (SiliconFlow, OpenAI, Tencent Cloud, etc.).
+        # Configure via Web UI: Settings → Plugins → Long Memory.
+        embedding:
+          provider: 'none'              # 'none' | 'ollama' | 'openai-compatible'
+          model: ''                     # e.g. 'bge-m3' (ollama) / 'BAAI/bge-m3' (openai-compatible)
+          dimension: 1024               # 1024 for bge-m3; 768 for nomic-embed-text; 1536 for text-embedding-3-small
+          batch_size: 16                # texts per API call
+          timeout_ms: 30000             # recall short-circuits to FTS5 on timeout
+          ollama:
+            base_url: 'http://127.0.0.1:11434'
+          openai_compatible:
+            base_url: ''                # e.g. 'https://api.siliconflow.cn/v1'
+            api_key: ''                 # direct string or '$ENV_VAR_NAME' for SecretRef
+
+        # Recall budget
+        recall:
+          max_hits: 10
+          max_recall_bytes: 4096
+          token_budget: 1000
+          scope: ['user', 'project', 'domain', 'episodic']
+
+        # L7 consolidate (M4 — auto memory extraction on turn/end)
+        l7:
+          enabled: true               # enable auto memory extraction
+          interval_ms: 21600000          # 6h minimum between extractions
+          batch_turns: 50
+          auto_extract: true             # LLM extraction + keyword fallback
+          extractor_model: ''            # empty = use DSH default model
+          extractor_temp: 0.2
+
+        # Auto-detect domain keywords for scope inference (§3.4)
+        # Add your own domain keywords to help scope auto-detection.
+        domain_keywords:
+          - '编程'
+          - 'programming'
+          - '写作'
+          - 'writing'
+
+        # Audit log retention
+        audit:
+          retention_rows: 100000
