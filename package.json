@@ -1,6 +1,6 @@
 {
   "name": "@wwskills/dsh-long-memory",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Long-term cross-session memory plugin for DeepSeek Harness (L5 + L7 layers): SQLite-backed, FTS5 + optional embedding recall, append-only audit log, single-bundle dual-face packaging.",
   "type": "module",
   "main": "lib/index.js",
