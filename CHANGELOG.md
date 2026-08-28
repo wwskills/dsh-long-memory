@@ -3,7 +3,33 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased] — 2026-08-28
+
+### Added — Self-evolving learning (merged from dsh-agent-evolve)
+
+- Signal word detection: real-time correction capture on user messages containing signal words (8 CN + 7 EN, configurable)
+- Tool error capture: tools/result event listener auto-records tool failures as corrections
+- Agent error capture: agent/error event listener auto-records harness-level errors
+- Lesson extraction: LLM-powered structured lesson extraction from correction-triggering messages
+- Rule lifecycle: proposed to approved to rejected to archived to promoted_to_agents state machine
+- Rule injection: approved rules auto-injected into agent context via agent/pre-step (800 token budget, hit_count tracking)
+- Rule conflict detection: Jaccard overlap >60% warns on approve
+- AGENTS.md promotion: high-hit-count rules can be promoted to AGENTS.md format
+- Daily rules decay: stale rules (90 days unhit) auto-archived
+- 6 new Web API routes: corrections (list/extract/ignore), rules (list/approve/reject/promote/source/edit), stats
+- 4 Tab WebUI: Corrections / Rules / Memories / Persona (replaces previous stub)
+- Migration 0004: corrections + rules + usage_stats tables
+
+### Changed
+
+- lib/client.js: replaced 458-line stub with 2769-line complete 4 Tab management UI
+- lib/index.js: added tools/result + agent/error listeners, rule injection in agent/pre-step, signal word detection in session/event, 6 API routes, daily rules decay timer
+
+### Removed
+
+- dsh-agent-evolve as standalone plugin (merged into long-memory)
+
 
 ## [0.2.0] - 2026-08-26
 
@@ -61,9 +87,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - API keys support `$ENV_VAR_NAME` SecretRef pattern
 - Sensitive content detection (api_key/secret/password) routes to confirm queue
 - No hardcoded credentials, paths, or provider-specific values
-
-## [Unreleased]
-
-### Fixed
-
-- Embedding cache key now uses composite `(content_sha256, model, dim)` instead of `content_sha256` alone (migration 0003). Switching embedding models no longer silently reuses stale vectors.
