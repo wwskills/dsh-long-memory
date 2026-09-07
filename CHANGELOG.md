@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
+## [Unreleased] — 2026-09-07 (WebUI rewrite to TSX + UX pass)
+
+### Changed
+
+- **Client rewritten from the pre-packaged `src/client.js` bundle into clean
+  TypeScript + JSX** under `src/client/`, mirroring the dsh-kb engineering
+  standard: `theme.ts` (design tokens: one radius/type/spacing scale + shared
+  style vocabulary), `locales.ts` (typed zh/en + safe translate), `meta.ts`
+  (trigger/category/type/origin maps), `api.ts` (typed Web API client),
+  `primitives.tsx` (Toast/Modal/ConfirmDialog/PopoverMenu/Switch/…),
+  `SettingsPanel.tsx` (shell), `SettingsModal.tsx`, `index.tsx` (entry), and
+  five tabs under `client/tabs/`. `build.mjs` now bundles the client with
+  esbuild (banner/footer module-loader wrapper) instead of copying a bundle.
+
+### Fixed — UX
+
+- **Scope ↔ tab coupling**: the scope sidebar now only drives and highlights on
+  the Memories & Recall tabs (it is meaningless for Lessons/Rules/Persona);
+  those tabs dim the scope list and show an explaining hint
+- **Native `window.confirm`/`prompt` replaced with themed dialogs**: ignore
+  lesson, reject rule, rule-conflict warning, and memory delete (with a proper
+  reason field + hard-delete toggle) all use in-panel modals now
+- **Master switch** carries a descriptive tooltip and reads
+  Enabled/Disabled instead of an ambiguous ON/OFF pill
+- **Recall test** no longer shows a fake `score` column the list endpoint never
+  returns (was always `—`); it shows rank + type + scope instead
+- **Removed the redundant header overview strip** (its counts already live on
+  the tab badges and the sidebar stats)
+
+### Fixed — Visual
+
+- Unified border-radius / font-size / spacing onto single scales (was a mix of
+  8/12/15px radii, six font sizes, and a dozen ad-hoc paddings)
+- Tabs and scope items gain glyphs as visual anchors; consistent hover/focus
+  states and transitions across buttons, rows, menus and cards
+
 ## [Unreleased] — 2026-09-07 (TypeScript migration complete)
 
 ### Changed

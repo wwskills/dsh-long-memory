@@ -8,24 +8,24 @@
  *      at runtime).
  *   2. Invariant bundle — src/invariant.ts → lib/invariant.js (the package's
  *      separate `./invariant` export entry).
- *   3. Per-module pass — every other src/*.ts is transformed (types stripped,
- *      relative imports preserved) to lib/<name>.js. The legacy test scripts
- *      under scripts/ import these module paths directly, and this pass keeps
- *      them byte-in-sync with the TypeScript sources instead of drifting.
- *   4. Client copy — src/client.js (the pre-existing pre-wrapped browser
- *      bundle) is copied verbatim to lib/client.js. It already opens with
- *      `window.__ModuleLoader__.load({...})`, so bundling it again would
- *      double-wrap. When the client is re-sourced as TSX, switch to the
- *      esbuild cjs + banner/footer path (see dsh-kb's build.mjs).
+ *   3. Per-module pass — every other top-level src/*.ts is transformed (types
+ *      stripped, relative imports preserved) to lib/<name>.js. The legacy test
+ *      scripts under scripts/ import these module paths directly, and this pass
+ *      keeps them byte-in-sync with the TypeScript sources instead of drifting.
+ *   4. Client bundle — src/client/index.tsx is bundled to lib/client.js as a
+ *      classic factory script wrapped in `window.__ModuleLoader__.load(...)`;
+ *      react / jsx-runtime and the DSH client UI packages stay external (the
+ *      shell injects them at runtime), mirroring dsh-kb's build.mjs.
  *
  * Declarations are emitted separately by tsc (esbuild strips types).
  */
 import { build } from 'esbuild'
 import { mkdirSync, readdirSync } from 'node:fs'
-import { copyFile, readFile, writeFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 
+const PACKAGE_ID = '@wwskills/dsh-long-memory'
 const PACKAGE_ROOT = new URL('..', import.meta.url)
 const SRC_DIR = new URL('src', PACKAGE_ROOT)
 
@@ -92,10 +92,11 @@ await build({
 await stripMachinePaths('lib/invariant.js')
 
 // ── Pass 3: per-module transform (flat lib layout the scripts import) ───────
-const reserved = new Set(['index.ts', 'invariant.ts', 'client.js'])
+// Only top-level src/*.ts modules; the client/ subtree is a separate bundle.
+const reserved = new Set(['index.ts', 'invariant.ts'])
 const moduleEntries = []
 for (const name of readdirSync(SRC_DIR)) {
-  if (!name.endsWith('.ts') || reserved.has(name)) continue
+  if (!name.endsWith('.ts') || name.endsWith('.d.ts') || reserved.has(name)) continue
   moduleEntries.push(`src/${name}`)
 }
 if (moduleEntries.length > 0) {
@@ -115,8 +116,37 @@ if (moduleEntries.length > 0) {
   }
 }
 
-// ── Pass 4: client copy (pre-wrapped bundle — see header note) ──────────────
-await copyFile('src/client.js', 'lib/client.js')
+// ── Pass 4: client bundle (browser factory, wrapped for the module loader) ──
+const clientExternal = [
+  'react',
+  'react/jsx-runtime',
+  'react-dom',
+  '@deepseek-ai/dsh-client-ui-slots',
+  '@deepseek-ai/dsh-client-ui-primitives',
+  '@deepseek-ai/dsh-client-locale',
+]
+await build({
+  entryPoints: ['src/client/index.tsx'],
+  outfile: 'lib/client.js',
+  bundle: true,
+  format: 'cjs',
+  platform: 'browser',
+  target: ['es2020'],
+  sourcemap: true,
+  jsx: 'automatic',
+  external: clientExternal,
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'production'),
+  },
+  banner: {
+    js: `window.__ModuleLoader__.load({ id: ${JSON.stringify(PACKAGE_ID)}, factory: (require) => {\nvar module = { exports: {} };\n`,
+  },
+  footer: {
+    js: 'return module.exports; } });',
+  },
+  logLevel: 'info',
+})
+await stripMachinePaths('lib/client.js')
 
 // esbuild strips types, so declarations are emitted separately by tsc.
 execFileSync(
