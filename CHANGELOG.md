@@ -4,6 +4,111 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
+## [Unreleased] — 2026-09-07 (TypeScript migration complete)
+
+### Changed
+
+- **TypeScript migration finished**: the four remaining hand-written entry
+  modules moved to `src/` — `index.ts` (plugin entry, event listeners, Web API
+  routes, 8 mem_* tool factories), `invariant.ts` (append-only contract
+  assertions), `extract.ts` (TaskQueue / streamLlm / prompts / JSON parsing),
+  and `dsh-shims.d.ts` (ambient declarations for the DSH peer packages).
+  All audit fixes from the entry below are included; a dead import block
+  (TaskQueue/streamLlm/… never used in the entry body) was dropped
+- `src/client.js` now holds the pre-wrapped browser bundle (copied verbatim
+  from `lib/client.js`); it is re-sourced as TSX in a later pass
+- **`build.mjs` four-pass pipeline**: host bundle (`lib/index.js`), invariant
+  bundle (`lib/invariant.js`), per-module transform (every other `src/*.ts` →
+  `lib/<name>.js`, keeping the flat layout the `scripts/` test suite imports
+  byte-in-sync with the sources), and the client copy — followed by `tsc`
+  declarations into `lib/types`
+- `package.json`: `typecheck` / `build` / `check` scripts added; `test` now
+  runs vitest first and keeps the legacy node scripts; devDependencies for
+  typescript / esbuild / vitest / @types/node declared
+
+### Added
+
+- `tests/` vitest suite covering: CJK unigramization, TaskQueue
+  (concurrency / timeout / dispose), `parseJsonResponse` (direct / code
+  fence / prose), lesson & rule prompt shapes, settings defaults +
+  validation, signal-word resolution/matching, migration runner (fresh +
+  idempotent + schema tables), the append-only audit_log invariant, and the
+  recall-context budget helpers
+- `tests/stubs/` + vitest aliases so the host-supplied peer packages
+  (`@deepseek-ai/schemastery`, `@deepseek-ai/dsh-tools`) resolve to inert
+  stubs under vitest
+
+## [Unreleased] — 2026-09-07 (audit fixes)
+
+### Fixed — DSH 0.1.2-rc.1 compatibility
+
+- `tools/result` payload adaptation: judge errors via `result.isError === true`
+  and read `result.error.message` (older shapes kept as fallbacks); sessionId
+  derived from `exec.agent.session` — tool_error correction capture was
+  silently dead on 0.1.2
+- `session/end-seed` is a session-log event type delivered through
+  `session/event`, not a standalone bus event — the standalone listener never
+  fired; now matched inside the `session/event` handler
+- Write gating derives the session kind from `exec.agent.session.meta`
+  (origin/delegationDepth/agentPreset) — `exec.session.kind` does not exist in
+  0.1.2 and the gate never applied
+- Peer ranges widened to `>=0.1.0-rc.6 <0.2.0` (caret ranges with pre-release
+  tags do not cover 0.1.2-rc.1); cordis corrected to `^4.0.2`
+- Removed the non-existent `@deepseek-ai/dsh-client-runtime` from the client
+  inject manifest
+
+### Fixed — Security
+
+- `GET /api/embedding-config` no longer returns the plaintext API key (masked)
+- All mutating Web API routes reject cross-origin browser requests (CSRF guard)
+- Request bodies capped at 1 MB (unbounded read risk); invalid JSON now
+  returns 400 instead of 500; unknown methods on confirm-queue/persona answer
+  405 instead of hanging
+
+### Fixed — Data correctness
+
+- L7: Windows home resolution (`os.homedir()` instead of `HOME || '/root'`) —
+  LLM extraction silently fell back to keywords on Windows
+- L7: in-flight guard prevents concurrent duplicate extractions when
+  turn/end and session end arrive together; a failed run backs off 10 minutes
+  instead of locking the session out for the full interval
+- L7: LLM fetch now has a 60 s timeout; code-fenced JSON responses parse
+- L7: supersession only applies when the new candidate is written directly AND
+  is at least as confident — a queued (low-confidence) candidate can no longer
+  retire the old memory before user approval
+- L7: the buffer is cleared only up to the extracted range (messages older
+  than the batch window are no longer dropped unexamined); per-session
+  `l7_last_run:*` keys pruned to the most recent 100
+- Daily-note ingest uses the file's own date (local time) for `observed_at` —
+  historical notes were all stamped "today"
+- Rules decay interval is actually registered now (`ctx.effect` misuse
+  cleared it immediately); never-injected rules expire via
+  `COALESCE(last_hit_at, created_at)`; injection order gains a deterministic
+  tie-breaker
+- `agent/pre-step` error paths return a passthrough decision instead of
+  calling `next()` a second time (duplicate downstream listeners)
+- Rule injection honours the configured `rule_token_budget` (was a hardcoded
+  3200 chars)
+
+### Fixed — Recall / embeddings quality
+
+- Vector cache lookups filter by dimension (and skip length mismatches) —
+  stale rows from a previous embedding model no longer zero out cosine scores
+- Embedding dim metadata records the actual vector length and rejects
+  provider responses that ignore the configured dimension
+- `parseEmbedding` honours byteOffset/byteLength and skips misaligned blobs
+- Provider URL building normalises trailing slashes and duplicate `/v1`
+- A query made purely of FTS operators returns no hits instead of risking an
+  FTS5 syntax error
+- `mem_search`'s vector-enriched re-run no longer double-counts access
+- Settings edits hot-apply to the live runtime (watch → snake_case cfg patch);
+  previously only the embedding config took effect
+
+### Fixed — Tests
+
+- `test-migration.js` expected 3 migrations but the repo ships 4 (pre-existing
+  failure, updated the assertion)
+
 ## [Unreleased] — 2026-09-07
 
 ### Fixed — P1 Quality Improvements

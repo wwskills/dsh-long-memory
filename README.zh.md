@@ -118,6 +118,23 @@ L7 自动读取 DSH 的 LLM 配置，无需额外填写 API Key。
 - Node ≥ 22.5（使用内置 `node:sqlite`）
 - DeepSeek Harness 0.1.0-rc.2+
 
+## 开发
+
+宿主侧源码位于 `src/`（严格 TypeScript）；浏览器 bundle 目前为
+`src/client.js`（预包装产物，后续改为 TSX 源码）。`lib/` 仅为构建产物。
+
+```sh
+pnpm install
+pnpm run typecheck   # tsc --noEmit
+pnpm test            # vitest + 遗留 node 脚本（迁移、工具 e2e）
+pnpm run build       # esbuild 宿主/invariant bundle + 逐模块转换 + 客户端拷贝 + tsc 声明
+pnpm run check       # 以上全部
+```
+
+构建会把 `src/*.ts` 逐模块同步到 `lib/*.js` 的扁平布局（`scripts/` 测试
+脚本直接引用这些模块路径）。DSH / cordis 宿主包保持 external——运行时
+由 DSH profile 的 node_modules 提供。
+
 ## 许可证
 
 MIT — 见 [LICENSE](./LICENSE)。

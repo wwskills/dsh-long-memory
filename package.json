@@ -27,8 +27,18 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "node scripts/test-migration.js && node scripts/test-tools-e2e.js",
-    "prepublishOnly": "npm test"
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run && node scripts/test-migration.js && node scripts/test-tools-e2e.js",
+    "test:legacy": "node scripts/test-migration.js && node scripts/test-tools-e2e.js",
+    "check": "pnpm run typecheck && pnpm run test && pnpm run build",
+    "prepublishOnly": "npm run check"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "esbuild": "^0.25.0",
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.8"
   },
   "keywords": [
     "dsh",
@@ -57,7 +67,6 @@
       "platform": "web",
       "inject": [
         "@deepseek-ai/dsh-client-locale",
-        "@deepseek-ai/dsh-client-runtime",
         "@deepseek-ai/dsh-client-ui-slots",
         "@deepseek-ai/dsh-client-ui-primitives"
       ]
@@ -67,16 +76,14 @@
     "node": ">=22.5.0"
   },
   "peerDependencies": {
-    "@deepseek-ai/cordis": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-invariants": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-session": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-base": "^0.1.0-rc.6",
+    "@deepseek-ai/cordis": "^4.0.2",
+    "@deepseek-ai/dsh-tools": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-invariants": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-session": ">=0.1.0-rc.6 <0.2.0",
+    "@deepseek-ai/dsh-base": ">=0.1.0-rc.6 <0.2.0",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
-    "react": { "optional": true },
-    "@deepseek-ai/dsh-client-ui-*": { "optional": true },
-    "@deepseek-ai/dsh-client-*": { "optional": true }
+    "react": { "optional": true }
   }
 }

@@ -170,6 +170,25 @@ L7 reads your DSH LLM provider config automatically — no extra API key needed.
 - Node ≥ 22.5 (uses built-in `node:sqlite`)
 - DeepSeek Harness 0.1.0-rc.2+
 
+## Development
+
+The host-side sources live in `src/` as strict TypeScript; the browser bundle
+currently lives in `src/client.js` (pre-wrapped, re-sourced as TSX in a later
+pass). `lib/` is build output only.
+
+```sh
+pnpm install
+pnpm run typecheck   # tsc --noEmit
+pnpm test            # vitest + legacy node scripts (migrations, tools e2e)
+pnpm run build       # esbuild host/invariant bundles + per-module transform + client copy + tsc declarations
+pnpm run check       # all of the above
+```
+
+The build keeps the flat per-module `lib/*.js` layout in sync with `src/*.ts`
+(the `scripts/` test suite imports those module paths directly). Host DSH /
+cordis peer packages stay external — the DSH profile's node_modules provides
+them at runtime.
+
 ## Migrations
 
 | # | File | Description |

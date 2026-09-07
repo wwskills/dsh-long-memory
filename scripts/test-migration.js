@@ -31,7 +31,7 @@ console.log('1. Fresh install → applies 0001');
   assert(applied.length >= 1, `≥1 migration applied (got ${applied.length})`);
   assert(applied[0] === '0001_initial.sql', `0001_initial.sql applied`);
   const ver = driver.prepare(`SELECT value FROM schema_meta WHERE key='migrations_applied'`).get();
-  assert(ver && Number(ver.value) === 3, `migrations_applied=3 (got ${ver?.value})`);
+  assert(ver && Number(ver.value) === 4, `migrations_applied=4 (got ${ver?.value})`);
   driver.close();
 }
 
