@@ -4,7 +4,56 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
-## [Unreleased] — 2026-08-28
+## [Unreleased] — 2026-09-07
+
+### Fixed — P1 Quality Improvements
+
+- **Sidebar resize throttle**: added `requestAnimationFrame` throttle to mousemove handler
+- **Empty `.catch()` blocks**: 10 silent error swallowers replaced with `showToast` error notifications
+- **Hardcoded colors**: 19 inline hex colors replaced with DSH CSS variables
+- **Missing loading states**: added `scopeCountsLoading` indicator for sidebar stats
+- **Recall test UX**: added `recallError`/`recallNoResults` empty/error state display
+
+### Improved — P2 Polish
+
+- **JSDoc comments**: 31 JSDoc annotations on core components (Toast, PopoverMenu, Modal, MemoryCard, Sidebar)
+- **i18n robustness**: added `safeT()` fallback wrapper for missing translation keys
+- **CSS transitions**: 16 transition effects on sidebar, modal, toast, hover, and popover interactions
+
+---
+
+## [Unreleased] — 2026-09-04
+
+### Added — WebUI Layout Restructuring (M0+M1+M2)
+
+- **Sidebar + Main content layout**: resizable sidebar (160-360px) with scope filter (all/user/project/domain/episodic), search input, and statistics
+- **Toast notification system**: top-right overlay, auto-dismiss 3s, supports success/error/warning
+- **PopoverMenu component**: hover-reveal "⋯" button on memory cards, click to open archive/delete menu
+- **Modal component**: reusable dialog with Esc/backdrop-close, used for settings
+- **Recall test panel**: 5th tab for keyword-based memory recall testing with score/source/content display
+- **Settings Modal**: config panel moved from inline collapse to modal dialog with save/cancel buttons
+- **Sidebar search**: Enter-triggered FTS5 search, switches to memories tab
+- **Scope counts**: per-scope memory counts fetched from `/api/memories/stats`
+
+### Changed
+
+- `lib/client.js`: 2769 → 3224 lines (+455), main layout restructured to `display: flex` sidebar + content
+- `MemoryCard`: hover state + PopoverMenu replaces inline action buttons
+- `MemoriesTab`: added `doArchive` function (PUT `/api/memories/:id`), `scopeFilter`/`searchQuery` props
+- `LongMemorySettingsTab`: settings panel moved to Modal, sidebar state + resize logic added
+- i18n: 26 new zh/en key pairs for sidebar, recall, settings modal, toast
+
+### Fixed
+
+- P0: Sidebar state was orphan code — JSX now renders the sidebar UI
+- P0: `handleSidebarSearch` was a no-op — now reads `e.target.value`, calls `setSearchQuery`, switches to memories tab
+- P0: `personaFreqSessions`/`personaFreqDays` i18n keys had missing `{n}` parameter — now passes actual values
+
+### Removed
+
+- Inline config panel (replaced by Settings Modal)
+
+## [0.2.0] — 2026-08-28
 
 ### Added — Self-evolving learning (merged from dsh-agent-evolve)
 
@@ -17,6 +66,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Rule conflict detection: Jaccard overlap >60% warns on approve
 - AGENTS.md promotion: high-hit-count rules can be promoted to AGENTS.md format
 - Daily rules decay: stale rules (90 days unhit) auto-archived
+- Persona building: auto-builds user persona from USER-type memories (tech stack, coding style, communication, common tasks)
 - 6 new Web API routes: corrections (list/extract/ignore), rules (list/approve/reject/promote/source/edit), stats
 - 4 Tab WebUI: Corrections / Rules / Memories / Persona (replaces previous stub)
 - Migration 0004: corrections + rules + usage_stats tables
@@ -31,7 +81,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - dsh-agent-evolve as standalone plugin (merged into long-memory)
 
 
-## [0.2.0] - 2026-08-26
+## [0.2.0-beta] - 2026-08-26
 
 ### Added
 
