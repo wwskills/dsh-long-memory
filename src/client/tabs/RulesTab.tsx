@@ -36,7 +36,7 @@ function RuleCard(props: {
   onJumpToCorrection: (id: string) => void
 }): JSX.Element {
   const { rule, t } = props
-  const cat = categoryMeta[rule.category] ?? categoryMeta.coding
+  const cat = categoryMeta(rule.category)
   const tags = parseTags(rule.tags)
   const sources = ruleSources(rule)
   const shownSources = sources.slice(0, 3)
@@ -85,7 +85,7 @@ function RuleCard(props: {
           <>
             <button className="lm-btn" style={style.btnOutline} disabled={props.busy} onClick={() => props.onEdit(rule)}>{t('edit')}</button>
             {(rule.hit_count ?? 0) > PROMOTE_HIT_THRESHOLD ? (
-              <button className="lm-btn" style={{ ...style.btnOutline, color: '#fbbf24', borderColor: '#fbbf24' }} disabled={props.busy} onClick={() => props.onPromote(rule)}>
+              <button className="lm-btn" style={{ ...style.btnOutline, color: C.warn, borderColor: C.warn }} disabled={props.busy} onClick={() => props.onPromote(rule)}>
                 ⭐ {t('graduable')}
               </button>
             ) : null}
@@ -132,7 +132,7 @@ function EditModal(props: { rule: Rule, t: Translate, onSave: (patch: { content:
         <div>
           <div style={style.label}>{t('category')}</div>
           <select style={style.input} value={category} onChange={e => setCategory(e.target.value)}>
-            {CATEGORY_KEYS.map(k => <option key={k} value={k}>{categoryMeta[k].icon} {t(`category${k.charAt(0).toUpperCase()}${k.slice(1)}` as LocaleKey)}</option>)}
+            {CATEGORY_KEYS.map(k => <option key={k} value={k}>{categoryMeta(k).icon} {t(`category${k.charAt(0).toUpperCase()}${k.slice(1)}` as LocaleKey)}</option>)}
           </select>
         </div>
         <div>

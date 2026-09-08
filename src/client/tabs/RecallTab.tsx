@@ -11,7 +11,7 @@
 import { useState } from 'react'
 import { C, style, space, font } from '../theme.js'
 import type { Translate } from '../locales.js'
-import { memoryTypeMeta, memoryTypeFallback } from '../meta.js'
+import { memoryTypeMeta } from '../meta.js'
 import { SkeletonList, EmptyState, ErrorState, Chip } from '../primitives.js'
 import * as api from '../api.js'
 import type { Memory } from '../api.js'
@@ -56,7 +56,7 @@ export function RecallTab(props: { t: Translate, showToast: (message: string, ty
         : error !== null ? <ErrorState t={t} message={error} />
           : results !== null && results.length === 0 ? <EmptyState>{t('recallNoResults')}</EmptyState>
             : (results ?? []).map((m, i) => {
-                const typeMeta = memoryTypeMeta[m.type] ?? memoryTypeFallback
+                const typeMeta = memoryTypeMeta(m.type)
                 return (
                   <div key={m.id} className="lm-card" style={{ ...style.card, ...style.cardPad, marginBottom: space.sm }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: space.sm, marginBottom: space.sm }}>

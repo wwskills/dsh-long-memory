@@ -10,7 +10,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { C, style, space, font } from '../theme.js'
 import type { Translate } from '../locales.js'
-import { memoryTypeMeta, memoryTypeFallback, memoryOriginMeta, memoryOriginFallback, confidenceColor } from '../meta.js'
+import { memoryTypeMeta, memoryOriginMeta, memoryOriginFallback, confidenceColor } from '../meta.js'
 import { relativeTime, parseTags } from '../util.js'
 import { SkeletonList, EmptyState, ErrorState, Modal, PopoverMenu, ConfidenceBar, Chip } from '../primitives.js'
 import * as api from '../api.js'
@@ -28,7 +28,7 @@ function MemoryCard(props: {
 }): JSX.Element {
   const { memory: m, t } = props
   const [hover, setHover] = useState(false)
-  const typeMeta = memoryTypeMeta[m.type] ?? memoryTypeFallback
+  const typeMeta = memoryTypeMeta(m.type)
   const originMeta = memoryOriginMeta[m.origin ?? ''] ?? memoryOriginFallback
   const isArchived = m.status === 'archived'
   const tags = parseTags(m.tags)
