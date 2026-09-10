@@ -11,7 +11,7 @@ export declare const zh: {
     readonly tabRules: "规则";
     readonly tabMemories: "记忆";
     readonly tabPersona: "画像";
-    readonly recallTab: "召回测试";
+    readonly recallTab: "召回";
     readonly configBtn: "配置";
     readonly switchOn: "已启用";
     readonly switchOff: "已停用";
@@ -127,13 +127,13 @@ export declare const zh: {
     readonly personaValuePlaceholder: "请输入画像内容...";
     readonly personaEmptyHint: "暂无画像 — 积累足够 USER 类型记忆后可重建";
     readonly personaEmpty: "（暂无内容）";
-    readonly recallSearchPlaceholder: "输入测试关键词...";
-    readonly recallSearch: "测试";
-    readonly recallSearching: "测试中...";
+    readonly recallSearchPlaceholder: "输入关键词搜索记忆...";
+    readonly recallSearch: "搜索";
+    readonly recallSearching: "搜索中...";
     readonly recallNoResults: "没有匹配结果";
     readonly recallScore: "相关度";
     readonly recallSource: "来源";
-    readonly recallHint: "输入关键词，测试记忆的 FTS5 召回效果";
+    readonly recallHint: "输入关键词搜索已积累的记忆，查看匹配结果";
     readonly settingsTitle: "设置";
     readonly configExtract: "抽取设置";
     readonly configPersona: "画像与 Embedding";

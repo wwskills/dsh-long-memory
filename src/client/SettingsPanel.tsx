@@ -17,17 +17,15 @@ import { SettingsModal } from './SettingsModal.js'
 import { CorrectionsTab } from './tabs/CorrectionsTab.js'
 import type { Badges } from './tabs/CorrectionsTab.js'
 import { RulesTab } from './tabs/RulesTab.js'
-import { MemoriesTab } from './tabs/MemoriesTab.js'
 import { RecallTab } from './tabs/RecallTab.js'
 import * as api from './api.js'
 import type { EmbeddingStatus } from './api.js'
 
-type TabId = 'lessons' | 'rules' | 'memories' | 'recall'
+type TabId = 'lessons' | 'rules' | 'recall'
 
 const TABS: Array<{ id: TabId, labelKey: LocaleKey, badge?: keyof Badges }> = [
   { id: 'lessons', labelKey: 'tabLessons', badge: 'lessons' },
   { id: 'rules', labelKey: 'tabRules', badge: 'rules' },
-  { id: 'memories', labelKey: 'tabMemories', badge: 'memories' },
   { id: 'recall', labelKey: 'recallTab' },
 ]
 
@@ -49,7 +47,7 @@ export function SettingsPanel(props: { t: Translate }): JSX.Element {
 
   const [enabled, setEnabled] = useState(true)
   const [activeTab, setActiveTab] = useState<TabId>('lessons')
-  const [badges, setBadges] = useState<Badges>({ lessons: 0, rules: 0, memories: 0 })
+  const [badges, setBadges] = useState<Badges>({ lessons: 0, rules: 0 })
   const [stats, setStats] = useState<api.Stats | null>(null)
   const [highlightId, setHighlightId] = useState<string | null>(null)
   const [settingsOpen, setSettingsOpen] = useState(false)
@@ -64,7 +62,6 @@ export function SettingsPanel(props: { t: Translate }): JSX.Element {
         ...prev,
         lessons: data.corrections_pending ?? prev.lessons,
         rules: data.rules_proposed ?? prev.rules,
-        memories: data.memories_active ?? prev.memories,
       }))
     }).catch(() => { /* best-effort */ })
   }
@@ -81,8 +78,6 @@ export function SettingsPanel(props: { t: Translate }): JSX.Element {
         return <CorrectionsTab t={t} setBadges={setBadges} highlightId={highlightId} onClearHighlight={() => setHighlightId(null)} showToast={showToast} />
       case 'rules':
         return <RulesTab t={t} setBadges={setBadges} showToast={showToast} onJumpToCorrection={id => { setActiveTab('lessons'); setHighlightId(id) }} />
-      case 'memories':
-        return <MemoriesTab t={t} setBadges={setBadges} showToast={showToast} />
       case 'recall':
         return <RecallTab t={t} showToast={showToast} />
       default:

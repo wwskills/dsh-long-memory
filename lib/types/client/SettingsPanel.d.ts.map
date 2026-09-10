@@ -1,1 +1,1 @@
-{"version":3,"file":"SettingsPanel.d.ts","sourceRoot":"","sources":["../../../src/client/SettingsPanel.tsx"],"names":[],"mappings":"AACA;;;;;;;;GAQG;AAIH,OAAO,KAAK,EAAE,SAAS,EAAa,MAAM,cAAc,CAAA;AAgCxD,wBAAgB,aAAa,CAAC,KAAK,EAAE;IAAE,CAAC,EAAE,SAAS,CAAA;CAAE,GAAG,GAAG,CAAC,OAAO,CAkIlE"}
+{"version":3,"file":"SettingsPanel.d.ts","sourceRoot":"","sources":["../../../src/client/SettingsPanel.tsx"],"names":[],"mappings":"AACA;;;;;;;;GAQG;AAIH,OAAO,KAAK,EAAE,SAAS,EAAa,MAAM,cAAc,CAAA;AA8BxD,wBAAgB,aAAa,CAAC,KAAK,EAAE;IAAE,CAAC,EAAE,SAAS,CAAA;CAAE,GAAG,GAAG,CAAC,OAAO,CA+HlE"}

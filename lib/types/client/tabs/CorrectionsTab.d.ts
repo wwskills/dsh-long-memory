@@ -8,7 +8,6 @@ import type { Translate } from '../locales.js';
 export interface Badges {
     lessons: number;
     rules: number;
-    memories: number;
 }
 export declare function CorrectionsTab(props: {
     t: Translate;
