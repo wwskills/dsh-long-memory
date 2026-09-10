@@ -87,17 +87,3 @@ export const memoryOriginMeta: Record<string, OriginMeta> = {
 }
 export const memoryOriginFallback: OriginMeta = { icon: '⚪', labelKey: null }
 
-/** Ordered persona dimensions with their glyph + label key. */
-export const personaDims: Array<{ key: string, icon: string, labelKey: LocaleKey }> = [
-  { key: 'tech_stack', icon: '💻', labelKey: 'personaTechStack' },
-  { key: 'coding_style', icon: '✍️', labelKey: 'personaCodingStyle' },
-  { key: 'communication', icon: '💬', labelKey: 'personaCommunication' },
-  { key: 'common_tasks', icon: '📋', labelKey: 'personaCommonTasks' },
-]
-
-/** Colour a confidence bar green / accent / grey by threshold. */
-export function confidenceColor(confidence: number): string {
-  if (confidence >= 0.7) return 'var(--dsw-alias-state-success-primary, #30a46c)'
-  if (confidence >= 0.4) return 'var(--dsw-alias-accent, #3b6ef6)'
-  return 'var(--dsw-alias-label-tertiary, #8a9099)'
-}

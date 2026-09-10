@@ -10,6 +10,7 @@
  */
 
 import { useState } from 'react'
+import { IconDataOutline16 } from '@deepseek-ai/dsh-client-ui-primitives'
 import { style, space, radius, C } from './theme.js'
 import { zh, en, makeSafeTranslate } from './locales.js'
 import type { Translate } from './locales.js'
@@ -34,7 +35,7 @@ function SidebarEntry(props: { t: Translate, wide: boolean }): JSX.Element {
           justifyContent: props.wide ? 'flex-start' : 'center', fontSize: 14,
         }}
       >
-        <span aria-hidden style={{ fontSize: 18 }}>🧠</span>
+        <IconDataOutline16 size={props.wide ? 16 : 18} />
         {props.wide ? <span>{t('tab')}</span> : null}
       </button>
       {open ? (

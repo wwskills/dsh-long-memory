@@ -20,8 +20,6 @@ interface Draft {
   ruleThreshold: number
   ruleTokenBudget: number
   llmTimeoutMs: number
-  personaEverySessions: number
-  personaEveryMs: number
   model: string
   signalWordsText: string
   embedding: { autoDetect: boolean, ollamaBaseUrl: string, preferredModel: string, timeoutMs: number }
@@ -33,8 +31,6 @@ const DEFAULT_DRAFT: Draft = {
   ruleThreshold: 5,
   ruleTokenBudget: 800,
   llmTimeoutMs: 30000,
-  personaEverySessions: 50,
-  personaEveryMs: 7 * 24 * 60 * 60 * 1000,
   model: '',
   signalWordsText: '',
   embedding: { autoDetect: true, ollamaBaseUrl: 'http://127.0.0.1:11434', preferredModel: 'bge-m3', timeoutMs: 1000 },
@@ -64,8 +60,6 @@ export function SettingsModal(props: {
         ruleThreshold: Number.isFinite(data.ruleThreshold) ? Number(data.ruleThreshold) : 5,
         ruleTokenBudget: Number.isFinite(data.ruleTokenBudget) ? Number(data.ruleTokenBudget) : 800,
         llmTimeoutMs: Number.isFinite(data.llmTimeoutMs) ? Number(data.llmTimeoutMs) : 30000,
-        personaEverySessions: Number.isFinite(data.personaEverySessions) ? Number(data.personaEverySessions) : 50,
-        personaEveryMs: Number.isFinite(data.personaEveryMs) ? Number(data.personaEveryMs) : 7 * DAY_MS,
         model: typeof data.model === 'string' ? data.model : '',
         signalWordsText: Array.isArray(data.signalWords) ? data.signalWords.join(', ') : (typeof data.signalWords === 'string' ? data.signalWords : ''),
         embedding: {
@@ -91,8 +85,6 @@ export function SettingsModal(props: {
       ruleThreshold: Number(draft.ruleThreshold) || 5,
       ruleTokenBudget: Number(draft.ruleTokenBudget) || 800,
       llmTimeoutMs: Number(draft.llmTimeoutMs) || 30000,
-      personaEverySessions: Number(draft.personaEverySessions) || 50,
-      personaEveryMs: Number(draft.personaEveryMs) || 7 * DAY_MS,
       model: draft.model || '',
       signalWords: draft.signalWordsText || '',
       embedding: {
@@ -179,10 +171,8 @@ export function SettingsModal(props: {
         </div>
 
         <div style={cardBox}>
-          <div style={{ ...style.sectionTitle, fontSize: font.md, marginBottom: space.md }}>{t('configPersona')}</div>
+          <div style={{ ...style.sectionTitle, fontSize: font.md, marginBottom: space.md }}>{t('embedding')}</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: space.md }}>
-            {field(t('personaFreqSessions'), numberInput(draft.personaEverySessions, n => patch({ personaEverySessions: n }), 1, 10000))}
-            {field(t('personaFreqDays'), numberInput(Math.round(draft.personaEveryMs / DAY_MS), n => patch({ personaEveryMs: n * DAY_MS }), 1))}
             {field(t('embedding'), (
               <select style={style.input} value={draft.embedding.autoDetect ? 'auto' : 'none'} onChange={e => patchEmbedding({ autoDetect: e.target.value === 'auto' })}>
                 <option value="auto">{t('embeddingAuto')}</option>

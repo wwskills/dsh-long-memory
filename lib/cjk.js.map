@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/cjk.ts"],
+  "sourcesContent": ["// CJK unigram helpers.\n//\n// SQLite FTS5's default unicode61 tokenizer treats CJK characters as\n// punctuation (whitespace-separated tokens, but each CJK character is one\n// token only when it's between non-CJK boundaries). For Chinese memory\n// content we want every character to be its own searchable token.\n//\n// Strategy: at the application boundary (record / search / forget), expand\n// CJK runs so they are space-separated. The original content stays intact\n// in the `memories` table \u2014 only the FTS5 index sees the spaced version.\n//\n// We do this application-side (not via SQL triggers) because SQLite triggers\n// cannot call external tokenisers.\n\n/** Insert a space between adjacent CJK / CJK\u2194ASCII characters. */\nexport function unigramize(text: string): string {\n  if (typeof text !== 'string' || text.length === 0) return ''\n  return text\n    .replace(/[\\u4e00-\\u9fff]/g, c => ` ${c} `)\n    .replace(/\\s+/g, ' ')\n    .trim()\n}\n\n/** Quick check whether a string contains CJK Unified Ideographs. */\nexport function containsCjk(text: string): boolean {\n  return typeof text === 'string' && /[\\u4e00-\\u9fff]/.test(text)\n}\n"],
+  "mappings": "AAeO,SAAS,WAAW,MAAsB;AAC/C,MAAI,OAAO,SAAS,YAAY,KAAK,WAAW,EAAG,QAAO;AAC1D,SAAO,KACJ,QAAQ,oBAAoB,OAAK,IAAI,CAAC,GAAG,EACzC,QAAQ,QAAQ,GAAG,EACnB,KAAK;AACV;AAGO,SAAS,YAAY,MAAuB;AACjD,SAAO,OAAO,SAAS,YAAY,kBAAkB,KAAK,IAAI;AAChE;",
+  "names": []
+}

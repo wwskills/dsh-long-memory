@@ -26,7 +26,7 @@ import { execFileSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
 
 const PACKAGE_ID = '@wwskills/dsh-long-memory'
-const PACKAGE_ROOT = new URL('..', import.meta.url)
+const PACKAGE_ROOT = new URL('.', import.meta.url)
 const SRC_DIR = new URL('src', PACKAGE_ROOT)
 
 mkdirSync('lib', { recursive: true })
@@ -139,10 +139,10 @@ await build({
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV ?? 'production'),
   },
   banner: {
-    js: `window.__ModuleLoader__.load({ id: ${JSON.stringify(PACKAGE_ID)}, factory: (require) => {\nvar module = { exports: {} };\n`,
+    js: `window.__ModuleLoader__.load({\n\tid: ${JSON.stringify(PACKAGE_ID)},\n\tfactory: (require) => {\n\t\tvar module = { exports: {} };\n\t\tvar exports = module.exports;\n\t\tObject.defineProperty(exports, Symbol.toStringTag, { value: "Module" });\n`,
   },
   footer: {
-    js: 'return module.exports; } });',
+    js: '\n\t\treturn module.exports;\n\t},\n});',
   },
   logLevel: 'info',
 })

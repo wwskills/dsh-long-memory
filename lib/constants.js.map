@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/constants.ts"],
+  "sourcesContent": ["/** Shared limits and defaults. */\n\nexport const MAX_RECALL_BYTES_DEFAULT = 4096\nexport const MAX_CONTENT_CHARS = 2000\nexport const MAX_TAGS = 10\nexport const MAX_QUERY_CHARS = 500\nexport const DEFAULT_LIMIT = 10\nexport const MAX_LIMIT = 50\n"],
+  "mappings": "AAEO,MAAM,2BAA2B;AACjC,MAAM,oBAAoB;AAC1B,MAAM,WAAW;AACjB,MAAM,kBAAkB;AACxB,MAAM,gBAAgB;AACtB,MAAM,YAAY;",
+  "names": []
+}
