@@ -34,7 +34,10 @@ function SidebarEntry(props: { t: Translate, wide: boolean }): JSX.Element {
           justifyContent: props.wide ? 'flex-start' : 'center', fontSize: 14,
         }}
       >
-        <span aria-hidden style={{ fontSize: 18 }}>🧠</span>
+        <svg aria-hidden width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" style={{ flexShrink: 0 }}>
+          <path d="M8 1.5a3 3 0 0 0-3 3v.5a3 3 0 0 0-2 2.8v.4a3 3 0 0 0 2 2.8v.5a3 3 0 0 0 6 0v-.5a3 3 0 0 0 2-2.8v-.4a3 3 0 0 0-2-2.8v-.5a3 3 0 0 0-3-3z" />
+          <path d="M6 8h4M6 5h4M6 11h4" />
+        </svg>
         {props.wide ? <span>{t('tab')}</span> : null}
       </button>
       {open ? (

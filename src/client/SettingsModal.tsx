@@ -179,10 +179,8 @@ export function SettingsModal(props: {
         </div>
 
         <div style={cardBox}>
-          <div style={{ ...style.sectionTitle, fontSize: font.md, marginBottom: space.md }}>{t('configPersona')}</div>
+          <div style={{ ...style.sectionTitle, fontSize: font.md, marginBottom: space.md }}>{t('embedding')}</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: space.md }}>
-            {field(t('personaFreqSessions'), numberInput(draft.personaEverySessions, n => patch({ personaEverySessions: n }), 1, 10000))}
-            {field(t('personaFreqDays'), numberInput(Math.round(draft.personaEveryMs / DAY_MS), n => patch({ personaEveryMs: n * DAY_MS }), 1))}
             {field(t('embedding'), (
               <select style={style.input} value={draft.embedding.autoDetect ? 'auto' : 'none'} onChange={e => patchEmbedding({ autoDetect: e.target.value === 'auto' })}>
                 <option value="auto">{t('embeddingAuto')}</option>

@@ -15,7 +15,7 @@ import { SkeletonList, EmptyState, ErrorState, ConfirmDialog, Chip } from '../pr
 import * as api from '../api.js'
 import type { Correction } from '../api.js'
 
-export interface Badges { lessons: number, rules: number, memories: number, persona: number }
+export interface Badges { lessons: number, rules: number, memories: number }
 
 function CorrectionCard(props: {
   correction: Correction

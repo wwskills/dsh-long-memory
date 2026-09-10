@@ -10,7 +10,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { C, style, space, font } from '../theme.js'
 import type { Translate } from '../locales.js'
-import { memoryTypeMeta, memoryOriginMeta, memoryOriginFallback, confidenceColor } from '../meta.js'
+import { memoryTypeMeta, memoryOriginMeta, memoryOriginFallback } from '../meta.js'
 import { relativeTime, parseTags } from '../util.js'
 import { SkeletonList, EmptyState, ErrorState, Modal, PopoverMenu, ConfidenceBar, Chip } from '../primitives.js'
 import * as api from '../api.js'
@@ -61,7 +61,7 @@ function MemoryCard(props: {
       <div style={{ fontSize: font.md, color: C.text, lineHeight: 1.6, marginBottom: space.sm, wordBreak: 'break-word' }}>{m.content}</div>
 
       <div style={{ marginBottom: space.sm }}>
-        <ConfidenceBar value={confidence} color={confidenceColor(confidence)} label={t('memWeight')} />
+        <ConfidenceBar value={confidence} color={confidence >= 0.7 ? 'var(--dsw-alias-state-success-primary, #30a46c)' : confidence >= 0.4 ? 'var(--dsw-alias-brand-primary, #3b6ef6)' : 'var(--dsw-alias-label-tertiary, #8a9099)'} label={t('memWeight')} />
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: space.lg, fontSize: font.xs, color: C.tertiary, flexWrap: 'wrap' }}>
